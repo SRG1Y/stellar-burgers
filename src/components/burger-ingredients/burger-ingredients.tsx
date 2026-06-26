@@ -14,19 +14,25 @@ export const BurgerIngredients: FC = () => {
   const sauces = ingredients.filter((item) => item.type === 'sauce');
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
+
+  const contentRef = useRef<HTMLDivElement>(null);
+
   const titleBunRef = useRef<HTMLHeadingElement>(null);
   const titleMainRef = useRef<HTMLHeadingElement>(null);
   const titleSaucesRef = useRef<HTMLHeadingElement>(null);
 
   const [bunsRef, inViewBuns] = useInView({
+    root: contentRef.current,
     threshold: 0
   });
 
   const [mainsRef, inViewFilling] = useInView({
+    root: contentRef.current,
     threshold: 0
   });
 
   const [saucesRef, inViewSauces] = useInView({
+    root: contentRef.current,
     threshold: 0
   });
 
@@ -42,12 +48,17 @@ export const BurgerIngredients: FC = () => {
 
   const onTabClick = (tab: string) => {
     setCurrentTab(tab as TTabMode);
-    if (tab === 'bun')
-      titleBunRef.current?.scrollIntoView({ behavior: 'smooth' });
-    if (tab === 'main')
-      titleMainRef.current?.scrollIntoView({ behavior: 'smooth' });
-    if (tab === 'sauce')
-      titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
+
+    let target: HTMLHeadingElement | null = null;
+
+    if (tab === 'bun') target = titleBunRef.current;
+    if (tab === 'main') target = titleMainRef.current;
+    if (tab === 'sauce') target = titleSaucesRef.current;
+
+    target?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
   };
 
   return (
@@ -59,6 +70,7 @@ export const BurgerIngredients: FC = () => {
       titleBunRef={titleBunRef}
       titleMainRef={titleMainRef}
       titleSaucesRef={titleSaucesRef}
+      contentRef={contentRef}
       bunsRef={bunsRef}
       mainsRef={mainsRef}
       saucesRef={saucesRef}
