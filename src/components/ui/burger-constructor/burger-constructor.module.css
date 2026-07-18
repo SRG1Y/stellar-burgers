@@ -9,7 +9,7 @@
 .elements {
   min-height: 100px;
 
-  overflow-y: scroll;
+  overflow-y: auto;
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -73,4 +73,9 @@
   flex-direction: column;
   width: 100%;
   max-width: 536px;
+}
+
+.error {
+  color: #e52b1a;
+  text-align: center;
 }
