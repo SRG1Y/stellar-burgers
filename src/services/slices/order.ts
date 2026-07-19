@@ -6,19 +6,28 @@ import { clearConstructor } from './constructorSlice';
 export const createOrder = createAsyncThunk(
   'order/createOrder',
   async (data: string[], { dispatch }) => {
-    const response = await orderBurgerApi(data);
-    const order: TOrder = {
-      _id: response.order._id,
-      status: response.order.status,
-      name: response.order.name,
-      createdAt: response.order.createdAt,
-      updatedAt: response.order.updatedAt,
-      number: response.order.number,
-      ingredients: data
-    };
-    // Очищаем конструктор после успешного оформления заказа
-    dispatch(clearConstructor());
-    return order;
+    try {
+      const response = await orderBurgerApi(data);
+
+      console.log('ORDER RESPONSE:', response);
+
+      const order: TOrder = {
+        _id: response.order._id,
+        status: response.order.status,
+        name: response.order.name,
+        createdAt: response.order.createdAt,
+        updatedAt: response.order.updatedAt,
+        number: response.order.number,
+        ingredients: data
+      };
+
+      dispatch(clearConstructor());
+
+      return order;
+    } catch (e) {
+      console.error('CREATE ORDER ERROR:', e);
+      throw e;
+    }
   }
 );
 

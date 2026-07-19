@@ -35,11 +35,16 @@ export const refreshToken = (): Promise<TRefreshResponse> =>
       return refreshData;
     });
 
+console.log('TOKEN:', getCookie('accessToken'));
+
 export const fetchWithRefresh = async <T>(
   url: RequestInfo,
   options: RequestInit
 ) => {
   try {
+    console.log(url);
+    console.log(options);
+
     const res = await fetch(url, options);
     return await checkResponse<T>(res);
   } catch (err) {

@@ -35,7 +35,12 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getIngredients());
-    dispatch(getUser());
+
+    dispatch(getUser()).then((res) => {
+      console.log('GET USER RESULT:', res);
+    });
+
+    console.log('COOKIE:', document.cookie);
   }, [dispatch]);
 
   const handleModalClose = () => {
