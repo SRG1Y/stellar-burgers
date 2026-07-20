@@ -19,29 +19,17 @@ export const BurgerConstructor: FC = () => {
   const user = useSelector(selectUser);
   const orderState = useSelector(selectOrder);
 
-  console.log('BurgerConstructor render');
-  console.log('Constructor:', constructorItems);
-  console.log('User:', user);
-  console.log('Order state:', orderState);
-
   const orderModalData = orderState.order;
   const orderRequest = orderState.isLoading;
   const isBunSelected = !!constructorItems.bun;
 
   const onOrderClick = () => {
-    console.log('========== ORDER CLICK ==========');
-    console.log('USER:', user);
-    console.log('BUN:', constructorItems.bun);
-    console.log('INGREDIENTS:', constructorItems.ingredients);
-
     if (!user) {
-      console.log('❌ USER IS NULL');
       navigate('/login');
       return;
     }
 
     if (!constructorItems.bun) {
-      console.log('❌ NO BUN');
       return;
     }
 
@@ -51,14 +39,10 @@ export const BurgerConstructor: FC = () => {
       constructorItems.bun._id
     ];
 
-    console.log('✅ DISPATCH createOrder');
-    console.log('Ingredients IDs:', ingredientsIds);
-
     dispatch(createOrder(ingredientsIds));
   };
 
   const closeOrderModal = () => {
-    console.log('Closing order modal');
     dispatch(clearOrder());
   };
 

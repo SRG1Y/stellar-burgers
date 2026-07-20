@@ -9,8 +9,6 @@ export const createOrder = createAsyncThunk(
     try {
       const response = await orderBurgerApi(data);
 
-      console.log('ORDER RESPONSE:', response);
-
       const order: TOrder = {
         _id: response.order._id,
         status: response.order.status,

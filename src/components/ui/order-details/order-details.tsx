@@ -8,17 +8,13 @@ export const OrderDetailsUI: FC<OrderDetailsUIProps> = memo(
   ({ orderNumber }) => (
     <>
       <h2
-        className={`text text_type_digits-large mt-4 mb-8 ${styles.number}`}
+        className={`text text_type_digits-large mt-4 mb-8 ${styles.title}`}
         data-testid='order-number'
       >
         {orderNumber}
       </h2>
       <p className='text text_type_main-medium'>идентификатор заказа</p>
-      <img
-        className={`${styles.image} mt-15 mb-15`}
-        src={doneImage}
-        alt='заказ принят'
-      />
+      <img className={styles.img} src={doneImage} alt='заказ принят' />
       <p className='text text_type_main-default mb-1'>
         Ваш заказ начали готовить
       </p>

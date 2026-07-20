@@ -2,19 +2,11 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Страница конструктора бургера', () => {
   test.beforeEach(async ({ page }) => {
-    await page.route('**/api/auth/user', async (route) => {
-  await route.fulfill({
-    status: 200,
-    contentType: 'application/json',
-    body: JSON.stringify({
-      success: true,
-      user: {
-        email: 'test@test.com',
-        name: 'Test User'
-      }
-    })
-  });
+    await page.routeFromHAR('./tests/hars/user.har', {
+  url: '**/api/auth/user',
+  update: false
 });
+
 await page.routeFromHAR('./tests/hars/ingredients.har', {
   url: '**/api/ingredients',
   update: false
@@ -24,28 +16,52 @@ await page.routeFromHAR('./tests/hars/ingredients.har', {
     await page.waitForSelector('[data-testid="ingredient-card"]', { timeout: 15000 });
     await page.waitForTimeout(1000);
   });
-
+  
   test('должен добавлять ингредиент в конструктор', async ({ page }) => {
-    const ingredientCard = page.locator('[data-testid="ingredient-card"]').filter({
-      hasText: 'Краторная булка N-200i'
-    }).first();
-    const ingredientName = await ingredientCard.locator('.text_type_main-default').textContent();
-    
-    const addButton = ingredientCard.getByRole('button', { name: 'Добавить' });
-    await addButton.click();
 
-    const constructor = page.locator('[data-testid="burger-constructor"]');
-    await expect(constructor.locator(`text=${ingredientName} (верх)`)).toBeVisible({ timeout: 10000 });
-    await expect(constructor.locator(`text=${ingredientName} (низ)`)).toBeVisible({ timeout: 10000 });
-  });
+    const ingredientCard = page
+  .locator('[data-testid="ingredient-card"]')
+  .filter({
+    hasText: 'Краторная булка N-200i'
+  })
+  .first();
+
+const ingredientName = await ingredientCard
+  .locator('.text_type_main-default')
+  .textContent();
+
+const constructor = page.locator('[data-testid="burger-constructor"]');
+
+await expect(
+  constructor.locator('text=Выберите булки').first()
+).toBeVisible();
+
+await expect(
+  constructor.locator('text=Выберите начинку')
+).toBeVisible();
+
+const addButton = ingredientCard.getByRole('button', { name: 'Добавить' });
+await addButton.click();
+
+await expect(
+  constructor.locator(`text=${ingredientName} (верх)`)
+).toBeVisible();
+
+await expect(
+  constructor.locator(`text=${ingredientName} (низ)`)
+).toBeVisible();
+});
 
   test('должен открывать модальное окно ингредиента по клику', async ({ page }) => {
     const ingredientCard = page.locator('[data-testid="ingredient-card"]').filter({
       hasText: 'Краторная булка N-200i'
     }).first();
+    
+    const modal = page.locator('[data-testid="modal"]');
+await expect(modal).toBeHidden();
+    
     await ingredientCard.click();
 
-    const modal = page.locator('[data-testid="modal"]');
     await expect(modal).toBeVisible();
   });
 
@@ -54,10 +70,16 @@ await page.routeFromHAR('./tests/hars/ingredients.har', {
       hasText: 'Краторная булка N-200i'
     }).first();
     const ingredientName = await ingredientCard.locator('.text_type_main-default').textContent();
-    
-    await ingredientCard.click();
 
     const modal = page.locator('[data-testid="modal"]');
+await expect(modal).toBeHidden();
+
+await ingredientCard.click();
+
+await expect(modal).toBeVisible();
+
+    await ingredientCard.click();
+
     await expect(modal).toBeVisible();
 
     
@@ -75,7 +97,7 @@ await page.routeFromHAR('./tests/hars/ingredients.har', {
     await expect(modal).toBeVisible();
 
     const closeButton = page.locator('[data-testid="modal-close"]');
-    await closeButton.click({ force: true });
+    await closeButton.click();
     
     await expect(modal).toBeHidden({ timeout: 10000 });
   });
@@ -171,7 +193,7 @@ test.describe('Создание заказа', () => {
     await expect(orderNumber).toHaveText('12345');
 
     const closeButton = page.locator('[data-testid="modal-close"]');
-    await closeButton.click({ force: true });
+    await closeButton.click();
 
     await expect(modal).toBeHidden({ timeout: 10000 });
 

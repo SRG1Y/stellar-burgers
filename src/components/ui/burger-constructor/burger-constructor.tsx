@@ -19,8 +19,6 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
   closeOrderModal,
   isBunSelected
 }) => {
-  console.log('BurgerConstructorUI render:', constructorItems);
-
   return (
     <section
       className={styles.burger_constructor}
