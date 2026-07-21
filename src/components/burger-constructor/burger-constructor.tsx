@@ -19,17 +19,26 @@ export const BurgerConstructor: FC = () => {
   const user = useSelector(selectUser);
   const orderState = useSelector(selectOrder);
 
+  console.log('========== RENDER ==========');
+  console.log('USER:', user);
+  console.log('ORDER STATE:', orderState);
+  console.log('============================');
+
   const orderModalData = orderState.order;
   const orderRequest = orderState.isLoading;
   const isBunSelected = !!constructorItems.bun;
 
-  const onOrderClick = () => {
+  const onOrderClick = async () => {
+    console.log('USER:', user);
+
     if (!user) {
+      console.log('NO USER');
       navigate('/login');
       return;
     }
 
     if (!constructorItems.bun) {
+      console.log('NO BUN');
       return;
     }
 
@@ -39,7 +48,24 @@ export const BurgerConstructor: FC = () => {
       constructorItems.bun._id
     ];
 
-    dispatch(createOrder(ingredientsIds));
+    try {
+      const action = await dispatch(createOrder(ingredientsIds));
+
+      console.log('ACTION TYPE:', action.type);
+      console.log('ACTION:', action);
+
+      if (createOrder.fulfilled.match(action)) {
+        console.log('ORDER SUCCESS');
+      }
+
+      if (createOrder.rejected.match(action)) {
+        console.log('ORDER FAILED');
+        console.log('ERROR:', action.error);
+        console.log('PAYLOAD:', action.payload);
+      }
+    } catch (e) {
+      console.error('DISPATCH ERROR:', e);
+    }
   };
 
   const closeOrderModal = () => {

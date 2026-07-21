@@ -19,6 +19,14 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
   closeOrderModal,
   isBunSelected
 }) => {
+  console.log('==========================');
+  console.log('BurgerConstructorUI render');
+  console.log('orderRequest:', orderRequest);
+  console.log('orderModalData:', orderModalData);
+  console.log('bun:', constructorItems.bun);
+  console.log('ingredients:', constructorItems.ingredients);
+  console.log('==========================');
+
   return (
     <section
       className={styles.burger_constructor}
@@ -41,6 +49,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
           Выберите булки
         </div>
       )}
+
       <ul className={styles.elements}>
         {constructorItems.ingredients.length > 0 ? (
           constructorItems.ingredients.map(
@@ -61,6 +70,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
           </div>
         )}
       </ul>
+
       {constructorItems.bun ? (
         <div className={`${styles.element} mt-4 mr-4`}>
           <ConstructorElement
@@ -78,24 +88,29 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
           Выберите булки
         </div>
       )}
+
       <div className={`${styles.total} mt-10 mr-4`}>
         <div className={`${styles.cost} mr-10`}>
           <p className={`text ${styles.text} mr-2`}>{price}</p>
           <CurrencyIcon type='primary' />
         </div>
+
         <Button
           htmlType='button'
           type='primary'
           size='large'
           children='Оформить заказ'
-          onClick={onOrderClick}
+          onClick={() => {
+            console.log('===== BUTTON CLICK =====');
+            onOrderClick();
+          }}
           disabled={!isBunSelected}
           data-testid='order-button'
         />
       </div>
 
       {orderRequest && (
-        <Modal onClose={closeOrderModal} title={'Оформляем заказ...'}>
+        <Modal onClose={closeOrderModal} title='Оформляем заказ...'>
           <Preloader />
         </Modal>
       )}
