@@ -35,7 +35,8 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getIngredients());
-    dispatch(getUser());
+
+    dispatch(getUser()).then((res) => {});
   }, [dispatch]);
 
   const handleModalClose = () => {
